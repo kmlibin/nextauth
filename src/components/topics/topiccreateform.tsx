@@ -31,12 +31,17 @@ export default function TopicCreateForm() {
               label="Name"
               labelPlacement="outside"
               placeholder="Name"
+              //add these with nextui so it displays errors. without next ui, just display as normal. 
+              isInvalid={!!formState.errors.name}
+              errorMessage={formState.errors.name?.join(', ')}
             />
             <Textarea
               name="description"
               label="Description"
               labelPlacement="outside"
               placeholder="Describe Your Topic"
+              isInvalid={!!formState.errors.description}
+              errorMessage={formState.errors.description?.join(', ')}
             />
             <Button type="submit"> Submit</Button>
           </div>
