@@ -11,7 +11,17 @@ const createTopicSchema = z.object({
   description: z.string().min(10),
 });
 
-export async function createTopic(formData: FormData) {
+interface CreateTopicFormState {
+  errors: {
+    name?: string[];
+    description?: string[];
+  };
+}
+
+export async function createTopic(
+  formState: CreateTopicFormState,
+  formData: FormData
+): Promise<CreateTopicFormState> {
   //todo:
   //revalidate the homepage after creating a topic
 
@@ -23,4 +33,15 @@ export async function createTopic(formData: FormData) {
     name: formData.get("name"),
     description: formData.get("description"),
   });
+
+  //if there is an error, we want to return something back to frontend via use formstate hook
+  if (!result.success) {
+    return {
+      errors: result.error.flatten().fieldErrors,
+    };
+  }
+  //not an error, but we are returning a type that matches the interface
+  return {
+    errors: {},
+  };
 }
