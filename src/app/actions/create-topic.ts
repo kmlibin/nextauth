@@ -54,7 +54,7 @@ export async function createTopic(
     };
   }
 
-  //declare this because we need the topic id for redirect. remember, redirect works by throwing an error, 
+  //declare this because we need the topic id for redirect. remember, redirect works by throwing an error,
   //so redirect needs to be outside the block because after an error is thrown, nothing else runs
 
   let topic: Topic;
@@ -82,8 +82,7 @@ export async function createTopic(
     }
   }
 
-  revalidatePath('/')
+  revalidatePath("/");
   redirect(paths.topicShowPath(topic.slug));
   //not an error, but we are returning a type that matches the interface
-
 }
