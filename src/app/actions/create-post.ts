@@ -23,7 +23,10 @@ interface CreatePostFormState {
     _form?: string[];
   };
 }
+
+//grab slug as well!
 export async function createPost(
+  slug: string,
   formState: CreatePostFormState,
   formData: FormData
 ): Promise<CreatePostFormState> {
@@ -39,17 +42,58 @@ export async function createPost(
     };
   }
 
- const session = await auth()
- if(!session || !session.user) {
+  //check if user is logged in
+  const session = await auth();
+  if (!session || !session.user) {
     return {
-        errors: {
-            _form:['You must be logged in to complete action']
-        }
-    }
- }
+      errors: {
+        _form: ["You must be logged in to complete action"],
+      },
+    };
+  }
 
-  return {
-    errors: {},
-  };
+  //now need to use the slug. to create a post, you need the topicId, which is the slug (name of the topic, ie javascript). we got the
+  //slug from the frontend, now we check the db to see if the slug exists as a topic. It is the Post schema from Prisma
+  const topic = await db.topic.findFirst({
+    where: { slug: slug },
+  });
+
+  if (!topic) {
+    return {
+      errors: {
+        _form: ["Cannot find topic"],
+      },
+    };
+  }
+
+  //create post..post declared out here because we are redirecting user at the end
+  let post: Post;
+  try {
+    post = await db.post.create({
+      data: {
+        title: result.data.title,
+        content: result.data.content,
+        userId: session.user.id,
+        topicId: topic.id,
+      },
+    });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return {
+        errors: {
+          _form: [error.message],
+        },
+      };
+    } else {
+      return {
+        errors: {
+          _form: ["Failed to create post"],
+        },
+      };
+    }
+  }
+
   //revalidate topic show page
+  revalidatePath(paths.topicShowPath(slug))
+  redirect(paths.postShowPath(slug, post.id))
 }

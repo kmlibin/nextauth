@@ -12,8 +12,19 @@ import {
 import * as actions from "../../app/actions";
 import FormButton from "../common/form-button";
 
-export default function PostCreateForm() {
-  const [formState, action] = useFormState(actions.createPost, { errors: {} });
+//we need to pass the slug so it can eventually be passed to the server action for creating a topic.
+interface PostCreateFormProps {
+  slug: string;
+}
+
+export default function PostCreateForm({ slug }: PostCreateFormProps) {
+  //we have useFormState, which passes along form information. but we also need to include the slug, which isn't in the form info. how?
+  //now there are three arguments. slug, formState, formData. so now need to update the type definition for server action
+  const [formState, action] = useFormState(
+    actions.createPost.bind(null, slug),
+    { errors: {} }
+  );
+
   return (
     <Popover placement="left">
       <PopoverTrigger>
