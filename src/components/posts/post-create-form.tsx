@@ -7,6 +7,7 @@ import {
   Popover,
   PopoverTrigger,
   PopoverContent,
+  divider,
 } from "@nextui-org/react";
 import * as actions from "../../app/actions";
 import FormButton from "../common/form-button";
@@ -31,7 +32,7 @@ export default function PostCreateForm() {
               labelPlacement="outside"
               placeholder="title"
               isInvalid={!!formState.errors.title}
-              errorMessage={formState.errors.title?.join(', ')}
+              errorMessage={formState.errors.title?.join(", ")}
             />
             <Textarea
               name="content"
@@ -39,10 +40,15 @@ export default function PostCreateForm() {
               labelPlacement="outside"
               placeholder="content"
               isInvalid={!!formState.errors.content}
-              errorMessage={formState.errors.content?.join(', ')}
+              errorMessage={formState.errors.content?.join(", ")}
             />
 
             <FormButton>Create Post</FormButton>
+            {formState.errors._form ? (
+              <div className="rounded p-2 bg-red-200 border border-red-400">
+                {formState.errors._form.join(", ")}
+              </div>
+            ) : null}
           </div>
         </form>
       </PopoverContent>
