@@ -7,6 +7,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { db } from "@/db";
 import paths from "@/paths";
+
 //create an object for zod validation
 const createTopicSchema = z.object({
   name: z
