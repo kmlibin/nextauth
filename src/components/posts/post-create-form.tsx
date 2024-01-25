@@ -12,6 +12,7 @@ import * as actions from "../../app/actions";
 import FormButton from "../common/form-button";
 
 export default function PostCreateForm() {
+  const [formState, action] = useFormState(actions.createPost, { errors: {} });
   return (
     <Popover placement="left">
       <PopoverTrigger>
@@ -20,20 +21,25 @@ export default function PostCreateForm() {
 
       {/* //all content that appears when user clicks the button */}
       <PopoverContent>
-        <form>
+        <form action={action}>
           <div className="flex flex-col gap-4 p-4 w-80">
             <h3 className="text-lg">Create a Post</h3>
             <Input
+              //remember, the name prop is what's sent to server action, so title and content
               name="title"
               label="Title"
               labelPlacement="outside"
               placeholder="title"
+              isInvalid={!!formState.errors.title}
+              errorMessage={formState.errors.title?.join(', ')}
             />
-            <Input
+            <Textarea
               name="content"
               label="Content"
               labelPlacement="outside"
               placeholder="content"
+              isInvalid={!!formState.errors.content}
+              errorMessage={formState.errors.content?.join(', ')}
             />
 
             <FormButton>Create Post</FormButton>
