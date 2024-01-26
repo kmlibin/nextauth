@@ -5,7 +5,8 @@ interface PostShowProps {
   postId: string;
 }
 
-//just "normally" fetching/returning data in a component
+//just "normally" fetching/returning data in a component since it's so simple
+
 export default async function PostShow({ postId }: PostShowProps) {
   const post = await db.post.findFirst({
     where: { id: postId },
@@ -14,7 +15,7 @@ export default async function PostShow({ postId }: PostShowProps) {
   if (!post) {
     notFound();
   }
-  
+
   return (
     <div className="m-4">
       <h1 className="text-2xl font-bold my-2">{post.title}</h1>
