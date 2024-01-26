@@ -3,7 +3,7 @@ import { db } from "@/db";
 
 //query file with db requests
 
-//this one is a more streamlined example. 
+//this one is a more streamlined example.
 // export type PostWithData = Awaited<
 //   ReturnType<typeof fetchPostsByTopicSlug>
 // >[number];
@@ -33,5 +33,25 @@ export function fetchPostsByTopicSlug(slug: string): Promise<PostWithData[]> {
       user: { select: { name: true } },
       _count: { select: { comments: true } },
     },
+  });
+}
+
+export function fetchTopPosts(): Promise<PostWithData[]> {
+  return db.post.findMany({
+    orderBy: [
+      {
+        comments: {
+          //order by number of comments
+          _count: "desc",
+        },
+      },
+    ],
+    include: {
+      topic: { select: { slug: true } },
+      user: { select: { name: true, image: true } },
+      _count: { select: { comments: true } },
+    },
+    //dont need them all, let's just have 5
+    take: 5,
   });
 }
